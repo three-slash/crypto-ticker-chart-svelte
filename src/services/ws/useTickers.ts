@@ -85,28 +85,18 @@ const useTickers = () => {
       subscribe(ws, SUBSCRIPTION);
     }
 
-    // Market data comes in a marketUpdate
-    // In this case, we're expecting trades so we look for marketUpdate.tradesUpdate
     if (data?.marketUpdate) {
       const { currencyPairId } = data.marketUpdate.market;
-      const isInPairList = [
-        CryptoPairId.BTCUSDT,
-        CryptoPairId.ETHUSDT,
-        CryptoPairId.SHIBUSDT,
-      ].includes(currencyPairId);
-
-      if (isInPairList) {
-        const currencyPairName = getCurrencyPairName(currencyPairId);
-        const tickData: object = last(
-          data.marketUpdate.intervalsUpdate.intervals
-        );
-        const tickEvent = new CustomEvent(TICK_EVENT, {
-          detail: {
-            [currencyPairName]: tickData,
-          },
-        });
-        document.dispatchEvent(tickEvent);
-      }
+      const currencyPairName = getCurrencyPairName(currencyPairId);
+      const tickData: object = last(
+        data.marketUpdate.intervalsUpdate.intervals
+      );
+      const tickEvent = new CustomEvent(TICK_EVENT, {
+        detail: {
+          [currencyPairName]: tickData,
+        },
+      });
+      document.dispatchEvent(tickEvent);
     }
   };
 };

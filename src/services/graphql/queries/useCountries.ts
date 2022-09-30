@@ -75,6 +75,7 @@ const useCountries = (
     () => getCountries(),
     {
       ...options,
+      refetchOnWindowFocus: false,
       cacheTime: 5000,
       select(data) {
         return (data?.countries?.edges ?? []).map(({ node }) => {

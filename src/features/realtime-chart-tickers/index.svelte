@@ -8,14 +8,12 @@
   import { currency } from "@store/currencyStore";
   import { ticker } from "@store/tickerStore";
   import ChartTicker from "@components/ChartTicker.svelte";
-  import { getLocaleByCode } from "@/utils/locale";
+
+  useTickers();
 
   const availablePairs = getAvailablePairs();
   const quoteCurrencies = getQuoteCurrencies();
   const exchangeRates = useExchangeRates(BASE_CURRENCY, quoteCurrencies);
-
-  // WS Subscription hardcoded
-  useTickers();
 
   const onTick = (event: CustomEvent) => {
     Object.keys(event.detail).map((pairs) => {
@@ -23,7 +21,6 @@
     });
   };
 
-  $: localeCountry = getLocaleByCode($country?.code);
   $: currencyRates = $exchangeRates?.data?.[$currency] ?? 1;
 
   onMount(() => {
@@ -39,7 +36,7 @@
     <ChartTicker
       isLoading={!$ticker?.[pairs]?.ohlc || !$country}
       currency={$currency}
-      locale={localeCountry}
+      countryCode={$country?.code}
       rates={currencyRates}
       price={$ticker?.[pairs]?.ohlc?.closeStr}
       volume={$ticker?.[pairs]?.volumeQuoteStr}

@@ -7,18 +7,29 @@
   export let volume;
   export let currency;
   export let rates;
-  export let locale;
+  export let countryCode;
   export let isLoading;
   export let shouldShowExtraDigit = false;
 
-  $: formattedPrice = parseFloat(price);
+  $: formatDigit = shouldShowExtraDigit ? 8 : 2;
+
+  // Default price based on USD
+  $: formattedPrice = formatCurrency({
+    currency: "USD",
+    countryCode: "en-US",
+    number: price,
+    digit: formatDigit,
+  });
+
+  $: formattedVolume = formatNumber(countryCode, volume);
+
   $: formattedRates = formatCurrency({
     currency,
-    countryCode: locale,
+    countryCode,
     number: Number(rates) * Number(price),
-    digit: shouldShowExtraDigit ? 8 : 2,
+    isCompact: true,
+    digit: formatDigit,
   });
-  $: formattedVolume = formatNumber(locale, volume);
 </script>
 
 <div

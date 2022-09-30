@@ -17,18 +17,21 @@ type FormatCurrencyOptions = {
   countryCode: string;
   number: number;
   digit?: number;
+  isCompact?: boolean;
 };
 
 export const formatCurrency = ({
   currency,
   countryCode,
   number,
+  isCompact,
   digit: minimumFractionDigits,
 }: FormatCurrencyOptions) =>
   !countryCode
     ? number
     : new Intl.NumberFormat(getLocaleByCode(countryCode), {
         style: "currency",
+        notation: isCompact ? "compact" : undefined,
         currency,
         minimumFractionDigits,
       }).format(number);
