@@ -2,29 +2,37 @@
   import useCountries, {
     type Country,
   } from "@services/graphql/queries/useCountries";
+  import { getAvailableCountries } from "@/config/exchange";
+  import { country } from "@store/countryStore";
+  import { currency } from "@store/currencyStore";
   import CountrySelect from "@components/CountrySelect.svelte";
 
-  let selectedCountry;
-  let countries: Array<Country> = [];
+  let filteredCountries: Array<Country>;
 
-  const handleOnSelect = (country: CustomEvent<Country>) => {
-    selectedCountry = country.detail;
+  const availableCountries = getAvailableCountries();
+  const countries = useCountries();
+
+  const handleOnSelect = (selectedCountry: CustomEvent<Country>) => {
+    $currency = selectedCountry.detail.currency.code;
+    $country = selectedCountry.detail;
   };
 
-  const fetchingCountries = useCountries();
-
   $: {
-    // Only filter 5 countrys
-    countries = ($fetchingCountries?.data ?? []).filter((item) =>
-      ["US", "HK", "ID", "JP", "DE"].includes(item.code)
+    filteredCountries = ($countries?.data ?? []).filter((item) =>
+      availableCountries.includes(item.code)
     );
+    const defaultCountry = filteredCountries.find((item) => item.code === "US");
+    $country = defaultCountry;
+    $currency = defaultCountry?.currency?.code;
   }
 </script>
 
-<CountrySelect
-  label="Select your country"
-  bind:selected={selectedCountry}
-  bind:isLoading={$fetchingCountries.isLoading}
-  on:select={handleOnSelect}
-  {countries}
-/>
+<div id="currency-selector" class="w-[400px] my-0 mx-auto">
+  <CountrySelect
+    label="Select your country"
+    countries={filteredCountries}
+    bind:selected={$country}
+    bind:isLoading={$countries.isLoading}
+    on:select={handleOnSelect}
+  />
+</div>

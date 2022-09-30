@@ -2,6 +2,8 @@ import { request, gql } from "graphql-request";
 import { useQuery, type UseQueryOptions } from "@sveltestack/svelte-query";
 import { first } from "radash";
 
+import { COUNTRY_API_ENDPOINT } from "@config/endpoint";
+
 export type Currency = {
   id: string;
   code: string;
@@ -59,13 +61,21 @@ const COUNTRIES_QUERY = gql`
 `;
 
 const getCountries = async (): Promise<ApiSuccessResponse> =>
-  request(import.meta.env.VITE_COUNTRY_API_ENDPOINT, COUNTRIES_QUERY);
+  request(COUNTRY_API_ENDPOINT, COUNTRIES_QUERY);
 
-const useCountries = () => {
+const useCountries = (
+  options?: UseQueryOptions<
+    ApiSuccessResponse,
+    ApiErrorResponse,
+    Array<Country>
+  >
+) => {
   return useQuery<ApiSuccessResponse, ApiErrorResponse, Array<Country>>(
     "getCountries",
     () => getCountries(),
     {
+      ...options,
+      cacheTime: 5000,
       select(data) {
         return (data?.countries?.edges ?? []).map(({ node }) => {
           const { currencies, ...country } = node;

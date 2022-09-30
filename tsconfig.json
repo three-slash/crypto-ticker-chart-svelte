@@ -8,13 +8,15 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@components/*": ["./src/components/*"],
-      "@styles/*": ["./src/styles/*"],
       "@assets/*": ["./src/assets/*"],
-      "@store/*": ["./src/store/*"],
+      "@components/*": ["./src/components/*"],
+      "@config/*": ["./src/config/*"],
       "@directives/*": ["./src/directives/*"],
-      "@services/*": ["./src/services/*"],
       "@features/*": ["./src/features/*"],
+      "@services/*": ["./src/services/*"],
+      "@store/*": ["./src/store/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@utils/*": ["./src/utils/*"],
     },
     /**
      * Typecheck JS in `.svelte` and `.js` files by default.

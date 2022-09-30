@@ -26,6 +26,8 @@
   },
   "dependencies": {
     "@sveltestack/svelte-query": "^1.6.0",
+    "country-flag-icons": "^1.5.5",
+    "country-locale-map": "^1.8.8",
     "graphql": "^16.6.0",
     "graphql-request": "^5.0.0",
     "radash": "^7.1.0"
